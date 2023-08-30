@@ -113,7 +113,7 @@
                                     style="background: rgb(249,167,25);color: rgb(0,0,0);">Ajouter </button></div>
                         </form>
                     </section>
-                    {{-- <section class="contact-clean" style="background: rgba(241,247,252,0);">
+                    <section class="contact-clean" style="background: rgba(241,247,252,0);">
                         <div class="container">
                             <div class="card shadow">
                                 <div class="card-header py-3">
@@ -126,165 +126,23 @@
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
-                                                    <th>Site</th>
-                                                    <th>Discipline</th>
-                                                    <th></th>
-                                                    <th></th>
+                                                    <th>Type</th>
+                                                    <th>Code categorie</th>
+                                                    <th>Montant</th>
+                                                    <th>Code discipline</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($calendrier as $calendriers)
+                                                @foreach ($mouvement as $mouvements)
                                                     <tr>
-                                                        <td>{{ \App\Models\FormatDate::formatFR($calendriers->date) }}
+                                                        <td>{{ \App\Models\FormatDate::formatFR($mouvements->date) }}
                                                         </td>
-                                                        @foreach ($site as $sites)
-                                                            @if ($calendriers->siteid == $sites->id)
-                                                                <td>{{ $sites->nom }}</td>
-                                                            @endif
-                                                        @endforeach
-                                                        @foreach ($discipline as $disciplines)
-                                                            @if ($calendriers->disciplineid == $disciplines->id)
-                                                                <td>{{ $disciplines->nom }}</td>
-                                                            @endif
-                                                        @endforeach
-                                                        <td style="text-align: left;">
-                                                            <button class="btn btn-link" type="button"
-                                                                style="border: none; color: blue; text-decoration: underline;"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#modification-modal-{{ $calendriers->id }}">
-                                                                Modifier
-                                                            </button>
-                                                        </td>
-                                                        <td style="text-align: left;">
-                                                            <button class="btn btn-link" type="button"
-                                                                style="border: none; color: rgb(244,3,3); text-decoration: underline;"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#suppression-modal-{{ $calendriers->id }}">
-                                                                Supprimer
-                                                            </button>
+                                                        <td>{{ $mouvements->type }}</td>
+                                                        <td>{{ $mouvements->code_categorie }}</td>
+                                                        <td>{{ number_format($mouvements->montant ?? 0, 2, ',', ' ') }}
+                                                        <td>{{ $mouvements->code_discipline }}</td>
                                                         </td>
                                                     </tr>
-                                                    <div class="modal fade" role="dialog" tabindex="-1"
-                                                        id="modification-modal-{{ $calendriers->id }}">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content"
-                                                                style="background-color: white">
-                                                                <div class="modal-header" style="text-align: left;">
-                                                                    <h4 class="modal-title" style="color: black">
-                                                                        Modification</h4>
-                                                                    <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p style="color: black">Vous êtes sur le point de
-                                                                        modifier un élément</p>
-                                                                    <form
-                                                                        action="{{ route('modifier', ['modelName' => 'Calendrier', 'id' => $calendriers->id]) }}"
-                                                                        method="post" enctype="multipart/form-data">
-                                                                        @csrf
-                                                                        @if (Session::has('success'))
-                                                                            <div class="alert alert-success">
-                                                                                {{ Session::get('success') }}</div>
-                                                                        @endif
-                                                                        @if (Session::has('error'))
-                                                                            <div class="alert alert-danger">
-                                                                                {{ Session::get('erreur') }}</div>
-                                                                        @endif
-                                                                        <div class="mb-3">
-                                                                            <input class="form-control"
-                                                                                type="datetime-local" name="date"
-                                                                                value="{{ $calendriers->date }}">
-                                                                            @error('date')
-                                                                                <span
-                                                                                    class="text-danger">{{ $message }}</span>
-                                                                            @enderror
-                                                                        </div>
-                                                                        <div class="mb-3"><label
-                                                                                class="form-label">Site</label><select
-                                                                                class="form-select" name="siteid">
-                                                                                <optgroup label="Site du Match">
-                                                                                    @foreach ($site as $sites)
-                                                                                        <option
-                                                                                            value="{{ $sites->id }}"
-                                                                                            {{ $calendriers->siteid == $sites->id ? 'selected' : '' }}>
-                                                                                            {{ $sites->nom }}
-                                                                                        </option>
-                                                                                    @endforeach
-                                                                                </optgroup>
-                                                                            </select>
-                                                                            @error('siteid')
-                                                                                <span
-                                                                                    class="text-danger">{{ $message }}</span>
-                                                                            @enderror
-                                                                        </div>
-                                                                        <div class="mb-3"><label
-                                                                                class="form-label">Site</label><select
-                                                                                class="form-select"
-                                                                                name="disciplineid">
-                                                                                <optgroup label="Site du Match">
-                                                                                    @foreach ($discipline as $disciplines)
-                                                                                        <option
-                                                                                            value="{{ $disciplines->id }}"
-                                                                                            {{ $calendriers->disciplineid == $disciplines->id ? 'selected' : '' }}>
-                                                                                            {{ $disciplines->nom }}
-                                                                                        </option>
-                                                                                    @endforeach
-                                                                                </optgroup>
-                                                                            </select>
-                                                                            @error('siteid')
-                                                                                <span
-                                                                                    class="text-danger">{{ $message }}</span>
-                                                                            @enderror
-                                                                        </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-light" type="button"
-                                                                        data-bs-dismiss="modal">Fermer</button>
-                                                                    <button class="btn btn-primary" type="submit"
-                                                                        style="background: rgb(249,167,25); color: rgb(0, 0, 0);">Modifier</button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal fade" role="dialog" tabindex="-1"
-                                                        id="suppression-modal-{{ $calendriers->id }}">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content"
-                                                                style="background-color: white">
-                                                                <div class="modal-header" style="text-align: left;">
-                                                                    <h4 class="modal-title" style="color: black">
-                                                                        Suppression</h4>
-                                                                    <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <form method="POST"
-                                                                        action="{{ route('supprimer', ['modelName' => 'Calendrier', 'id' => $calendriers->id]) }}">
-                                                                        @csrf
-                                                                        @if (Session::has('success'))
-                                                                            <div class="alert alert-success">
-                                                                                {{ Session::get('success') }}</div>
-                                                                        @endif
-                                                                        @if (Session::has('error'))
-                                                                            <div class="alert alert-danger">
-                                                                                {{ Session::get('erreur') }}</div>
-                                                                        @endif
-                                                                        <p style="color: black">Voulez-vous vraiment
-                                                                            supprimer cet élément ?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-light" type="button"
-                                                                        data-bs-dismiss="modal">Fermer</button>
-                                                                    <button class="btn btn-primary" type="submit"
-                                                                        style="background: rgb(238, 88, 74); color: rgb(0, 0, 0);">Supprimer</button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -292,7 +150,7 @@
                                 </div>
                             </div>
                         </div>
-                    </section> --}}
+                    </section>
                 </div>
                 <footer class="bg-white sticky-footer">
                     <div class="container my-auto">

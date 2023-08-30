@@ -15,6 +15,7 @@ use App\Models\Resultat;
 use App\Models\Site;
 use App\Models\V_athlete;
 use App\Models\V_mouvement;
+use App\Models\V_mouvement_detail;
 use App\Models\V_rang_athlete;
 use App\Models\V_resultat;
 use Illuminate\Http\Request;
@@ -114,7 +115,8 @@ class LinkController extends Controller
     function importDR()
     {
         if (Session::has('gestionnaireId')) {
-            return view('Gestionnaire.importDR');
+            $mouvement = V_mouvement_detail::all();
+            return view('Gestionnaire.importDR', compact('mouvement'));
         }
         return redirect('/');
     }
